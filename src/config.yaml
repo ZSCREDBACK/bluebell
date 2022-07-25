@@ -1,0 +1,32 @@
+app:
+  name: "web_app"
+  mode: "dev"
+  version: "0.0.1"
+  host: "127.0.0.1"
+  port: 12345
+
+mysql:
+  host: "192.168.118.138"
+  port: 3306
+  user: "root"
+  password: "123456"
+  dbname: "go_test"
+  maxOpenConns: 100
+  maxIdleConns: 50
+
+
+redis:
+  host: "192.168.118.138"
+  port: 6379
+  password: "123456"
+  db: 0
+  poolSize: 100
+
+log:
+  level: "debug"
+  filename: "./app.log"
+  # 单个日志最大10MB
+  maxSize: 10
+  maxBackups: 5
+  # 保存7天
+  maxAge: 7
