@@ -1,8 +1,8 @@
 package redis
 
 import (
+	"bluebell/settings"
 	"fmt"
-	"goScaffold/settings"
 
 	"github.com/go-redis/redis"
 )

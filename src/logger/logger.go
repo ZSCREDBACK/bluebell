@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"goScaffold/settings"
+	"bluebell/settings"
 	"net"
 	"net/http"
 	"net/http/httputil"

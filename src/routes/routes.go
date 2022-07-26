@@ -1,15 +1,26 @@
 package routes
 
 import (
-	"goScaffold/logger"
-	"goScaffold/settings"
+	"bluebell/logger"
+	"go.uber.org/zap"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Setup(cfg *settings.AppConfig) *gin.Engine {
-	gin.SetMode(cfg.Mode)
+func Setup(Mode string) *gin.Engine {
+	switch Mode {
+	case "debug":
+		gin.SetMode(gin.DebugMode)
+	case "release":
+		gin.SetMode(gin.ReleaseMode)
+	case "test":
+		gin.SetMode(gin.TestMode)
+	default:
+		zap.L().Warn("gin mode unknown: "+Mode+" (available mode: debug release test)",
+			zap.String("will set mode in", "debug"))
+		gin.SetMode(gin.DebugMode)
+	}
 
 	r := gin.Default()
 

@@ -1,8 +1,8 @@
 package mysql
 
 import (
+	"bluebell/settings"
 	"fmt"
-	"goScaffold/settings"
 
 	"go.uber.org/zap"
 

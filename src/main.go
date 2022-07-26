@@ -1,13 +1,14 @@
 package main
 
 import (
+	"bluebell/dao/mysql"
+	"bluebell/dao/redis"
+	"bluebell/logger"
+	"bluebell/pkg/snowflake"
+	"bluebell/routes"
+	"bluebell/settings"
 	"context"
 	"fmt"
-	"goScaffold/dao/mysql"
-	"goScaffold/dao/redis"
-	"goScaffold/logger"
-	"goScaffold/routes"
-	"goScaffold/settings"
 	"net/http"
 	"os"
 	"os/signal"
@@ -17,7 +18,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// Go Web项目通用脚手架模板-升级版
+// Bluebell 论坛项目
 
 func main() {
 	// 1.加载配置文件
@@ -51,10 +52,16 @@ func main() {
 	defer redis.Close()
 	zap.L().Debug("connect redis success")
 
-	// 5.注册路由
-	r := routes.Setup(settings.Conf)
+	// 5.初始化Snowflake
+	if err := snowflake.Init(settings.Conf.StartTime, settings.Conf.MachineID); err != nil {
+		fmt.Printf("初始化Snowflake ID生成器失败: %v\n", err)
+		return
+	}
 
-	// 6.启动服务(添加优雅关机的功能,Ctrl+C或kill-2)
+	// 6.注册路由
+	r := routes.Setup(settings.Conf.Mode)
+
+	// 7.启动服务(添加优雅关机的功能,Ctrl+C或kill-2)
 
 	srv := &http.Server{
 		Addr: fmt.Sprintf("%s:%d",
