@@ -12,6 +12,7 @@ var Conf = new(AppConfig)
 
 type AppConfig struct {
 	Name         string `mapstructure:"name"`
+	GinMode      string `mapstructure:"ginMode"`
 	Mode         string `mapstructure:"mode"`
 	Version      string `mapstructure:"version"`
 	StartTime    string `mapstructure:"startTime"`

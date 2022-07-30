@@ -1,5 +1,8 @@
 name: "web_app"
-mode: "debug"
+# gin框架运行模式,可选值: debug, release, test
+ginMode: "debug"
+# 调试模式(控制台输出详细日志),可选值: dev, prod
+mode: "dev"
 version: "0.0.1"
 # start time 尽量写近期时间,但不要写未来时间,可以延迟使用
 startTime: "2022-07-25"
@@ -13,7 +16,7 @@ mysql:
   port: 3306
   user: "root"
   password: "123456"
-  dbname: "go_test"
+  dbname: "bluebell"
   maxOpenConns: 100
   maxIdleConns: 50
 

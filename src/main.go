@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bluebell/controller"
 	"bluebell/dao/mysql"
 	"bluebell/dao/redis"
 	"bluebell/logger"
@@ -29,7 +30,7 @@ func main() {
 	fmt.Println("Init config success")
 
 	// 2.初始化日志
-	if err := logger.Init(settings.Conf.LogConfig); err != nil {
+	if err := logger.Init(settings.Conf.LogConfig, settings.Conf.Mode); err != nil {
 		fmt.Printf("初始化日志失败: %v\n", err)
 		return
 	}
@@ -58,10 +59,16 @@ func main() {
 		return
 	}
 
-	// 6.注册路由
-	r := routes.Setup(settings.Conf.Mode)
+	// 6.初始化gin框架内置的校验器
+	if err := controller.InitTrans("zh"); err != nil {
+		fmt.Printf("init trans failed, err:%v\n", err)
+		return
+	}
 
-	// 7.启动服务(添加优雅关机的功能,Ctrl+C或kill-2)
+	// 7.注册路由
+	r := routes.Setup(settings.Conf.GinMode)
+
+	// 8.启动服务(添加优雅关机的功能,Ctrl+C或kill-2)
 
 	srv := &http.Server{
 		Addr: fmt.Sprintf("%s:%d",

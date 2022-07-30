@@ -17,7 +17,7 @@ import (
 )
 
 // Init 初始化Logger
-func Init(cfg *settings.LogConfig) (err error) {
+func Init(cfg *settings.LogConfig, mode string) (err error) {
 	writeSyncer := getLogWriter(
 		cfg.Filename,
 		cfg.MaxSize,
@@ -30,7 +30,21 @@ func Init(cfg *settings.LogConfig) (err error) {
 	if err != nil {
 		return
 	}
-	core := zapcore.NewCore(encoder, writeSyncer, l)
+
+	var core zapcore.Core
+	if mode == "dev" {
+		// 进入开发模式,日志输出到控制台
+		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig()) // 使用内置的开发模式配置,你也可以选择自己调
+		core = zapcore.NewTee(                                                         // 可以把日志同时写入多个地方
+			zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), zap.DebugLevel), // 输出到控制台
+			// zapcore.Lock()作用是将标准输出(WriteSyncer类型)锁定,并转换成NewCore()需要的WriteSyncer类型
+			// 两个WriteSyncer类型有细微的差别
+			zapcore.NewCore(encoder, writeSyncer, l), // 输出到日志文件
+		)
+	} else if mode == "prod" {
+		// 进入生产模式,日志输出到文件
+		core = zapcore.NewCore(encoder, writeSyncer, l)
+	}
 
 	lg := zap.New(core, zap.AddCaller())
 
