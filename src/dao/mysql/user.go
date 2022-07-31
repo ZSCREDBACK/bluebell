@@ -15,6 +15,12 @@ import (
 // 定义一个加盐字符串
 var salt = "bluebell"
 
+var (
+	ErrUserExist       = errors.New("用户已存在")
+	ErrUserNotExist    = errors.New("用户不存在")
+	ErrInvalidPassword = errors.New("用户名或密码错误")
+)
+
 // CheckUserExist 判断用户记录是否存在
 func CheckUserExist(username string) (err error) {
 	// 查询数据库中符合条件的记录数
@@ -29,7 +35,7 @@ func CheckUserExist(username string) (err error) {
 
 	// 如果count大于0,则等式为true,则用户存在
 	if count > 0 {
-		return errors.New("用户已存在")
+		return ErrUserExist
 	}
 	return
 }
@@ -61,8 +67,8 @@ func Login(u *models.User) (err error) {
 	err = db.Get(user, sqlStr, u.Username)
 	fmt.Println("判断用户是否存在")
 	if err == sql.ErrNoRows { // 判断是否查询到记录(用户是否存在)
-		//return errors.New("用户不存在")
-		return errors.New("登录错误,请重试")
+		//return ErrUserNotExist
+		return ErrInvalidPassword
 
 		// 注意: 一般查询用户不存在,不要返回用户不存在这种信息,返回登录错误即可
 		// 避免用户恶意查询数据库
@@ -74,7 +80,7 @@ func Login(u *models.User) (err error) {
 
 	// 判断用户的登录密码是否正确
 	if user.Password != encryptPassword(u.Password) { // 将数据库中查询出来的密码与用户输入的密码进行比较
-		return errors.New("密码错误")
+		return ErrInvalidPassword
 	}
 
 	return

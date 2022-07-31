@@ -1,12 +1,13 @@
 package controller
 
 import (
+	"bluebell/dao/mysql"
 	"bluebell/logic"
 	"bluebell/models"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
-	"net/http"
 )
 
 // RegisterHandler 注册用户
@@ -23,18 +24,18 @@ func RegisterHandler(c *gin.Context) {
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			// 非validator.ValidationErrors类型错误直接返回
-			c.JSON(http.StatusOK, gin.H{
-				"msg": err.Error(),
-			})
+			ResponseErr(c, BadRequest) // 响应错误(请求参数不正确)
 			return
 		}
 
 		// 将validator.ValidationErrors类型的错误则进行翻译
-		c.JSON(http.StatusOK, gin.H{
-			//"msg": errs.Translate(trans),
-			// 使用removeTopStruct函数去除字段名中的结构体名称标识
-			"msg": RemoveTopStruct(errs.Translate(trans)),
-		})
+		//c.JSON(http.StatusOK, gin.H{
+		//	//"msg": errs.Translate(trans),
+		//	// 使用removeTopStruct函数去除字段名中的结构体名称标识
+		//	"msg": RemoveTopStruct(errs.Translate(trans)),
+		//})
+		ResponseErrWithMsg(c, BadRequest, RemoveTopStruct(errs.Translate(trans)))
+
 		return
 	}
 
@@ -50,16 +51,16 @@ func RegisterHandler(c *gin.Context) {
 	// 3.业务处理
 	if err := logic.Register(p); err != nil {
 		zap.L().Error("Register failed", zap.Error(err))
-		c.JSON(http.StatusOK, gin.H{
-			"message": "注册失败",
-		})
+		if errors.Is(err, mysql.ErrUserExist) { // errors.Is用于判断err是否是mysql.ErrUserExist类型
+			ResponseErrWithMsg(c, BadRequest, "注册失败,用户名已存在")
+			return
+		}
+		ResponseErr(c, ServerError)
 		return
 	}
 
 	// 4.返回响应
-	c.JSON(200, gin.H{
-		"message": "sign_up_ok",
-	})
+	ResponseOk(c, nil)
 }
 
 // LoginHandler 登录用户
@@ -72,15 +73,15 @@ func LoginHandler(c *gin.Context) {
 
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": err.Error(),
-			})
+			ResponseErr(c, BadRequest) // 响应错误(请求参数不正确)
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"msg": RemoveTopStruct(errs.Translate(trans)),
-		})
+		//c.JSON(http.StatusOK, gin.H{
+		//	"msg": RemoveTopStruct(errs.Translate(trans)),
+		//})
+		ResponseErrWithMsg(c, BadRequest, RemoveTopStruct(errs.Translate(trans)))
+
 		return
 	}
 
@@ -88,14 +89,14 @@ func LoginHandler(c *gin.Context) {
 	if err := logic.Login(p); err != nil {
 		// 将登录错误的用户记录到服务日志中
 		zap.L().Error("Login failed", zap.String("用户", p.Username), zap.Error(err))
-		c.JSON(http.StatusOK, gin.H{
-			"message": "登录失败,用户名或密码错误!",
-		})
+		if errors.Is(err, mysql.ErrUserNotExist) {
+			ResponseErr(c, NotFound) // 用户不存在
+			return
+		}
+		ResponseErr(c, AccountOrPasswordError)
 		return
 	}
 
 	// 3.返回响应
-	c.JSON(200, gin.H{
-		"message": "登录成功",
-	})
+	ResponseOk(c, nil)
 }
