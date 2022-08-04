@@ -13,6 +13,8 @@ const (
 	NotFound
 	ServerError
 	AccountOrPasswordError
+	NeedLogin
+	InvalidToken
 	UnknownError
 )
 
@@ -25,6 +27,8 @@ var responseCodeMsg = map[ResponseCode]string{
 	NotFound:               "未找到",
 	ServerError:            "服务器错误",
 	AccountOrPasswordError: "账号或密码错误",
+	NeedLogin:              "需要登录",
+	InvalidToken:           "无效的token",
 	UnknownError:           "未知错误",
 }
 

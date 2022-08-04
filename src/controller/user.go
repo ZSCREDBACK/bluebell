@@ -86,7 +86,8 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 2.业务处理
-	if err := logic.Login(p); err != nil {
+	token, err := logic.Login(p)
+	if err != nil {
 		// 将登录错误的用户记录到服务日志中
 		zap.L().Error("Login failed", zap.String("用户", p.Username), zap.Error(err))
 		if errors.Is(err, mysql.ErrUserNotExist) {
@@ -98,5 +99,5 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 3.返回响应
-	ResponseOk(c, nil)
+	ResponseOk(c, token)
 }
