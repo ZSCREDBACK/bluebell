@@ -3,11 +3,12 @@ package jwt
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/spf13/viper"
 	"time"
 )
 
 // TokenExpireDuration Access Token有效时间
-const TokenExpireDuration = time.Minute * 10
+//const TokenExpireDuration = time.Minute * 10 // 这里不再写死,而是通过配置文件来读取
 
 // 用于加盐的字符串
 var mySecret = []byte("带雨云埋一半山")
@@ -25,13 +26,17 @@ type CustomClaims struct {
 
 // GenToken 生成JWT
 func GenToken(userID int64, username string) (string, error) {
+
 	// 创建一个我们自己的声明
 	claims := CustomClaims{
 		userID,   // 自定义字段
 		username, // 自定义字段
 		jwt.RegisteredClaims{ // 指定内置声明的值,我们这里就简单的指定了两个内置声明，Issuer和ExpiresAt
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)), // 过期时间
-			Issuer:    "bluebell",                                              // 签发人/组织
+			//ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)), // 过期时间
+			ExpiresAt: jwt.NewNumericDate(
+				time.Now().Add(viper.GetDuration("auth.jwt_expire")),
+			),
+			Issuer: "bluebell", // 签发人/组织
 		},
 	}
 

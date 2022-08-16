@@ -24,3 +24,25 @@ CREATE TABLE `user` (
 -- UUID是随机的,会丧失按时间排序的功能(因为自增id会随着时间增加)
 
 -- 大型企业常常使用分布式ID生成器来生成用户id
+
+-- ------------------------------------------------
+
+-- 帖子相关的表
+DROP TABLE IF EXISTS `community`;
+CREATE TABLE `community` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `community_id` int(10) unsigned NOT NULL,
+  `community_name` varchar(128) COLLATE utf8mb4_general_ci NOT NULL,
+  `introduction` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_community_id` (`community_id`),
+  UNIQUE KEY `idx_community_name` (`community_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 插入一些测试数据
+INSERT INTO `community` (`community_id`, `community_name`, `introduction`, `created_time`, `updated_time`) VALUES
+(1, 'GO', 'GO语言社区', '2018-01-01 00:00:00', '2018-01-01 00:00:00'),
+(2, 'Python', '人工智能', '2020-01-01 00:00:00', '2020-01-01 00:00:00'),
+(3, 'Linux', 'Linux系统', '2022-01-01 00:00:00', '2022-01-01 00:00:00')

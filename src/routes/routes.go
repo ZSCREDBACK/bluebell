@@ -27,22 +27,37 @@ func Setup(GinMode string) *gin.Engine {
 
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
-	// 注册业务路由
-	r.POST("/signup", controller.RegisterHandler)
-	r.POST("/login", controller.LoginHandler)
+	v1 := r.Group("/api/v1")
 
-	// 注册一个测试路由
-	r.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
-		// JWTAuthMiddleware 用于验证请求头中是否具有有效的JWT,如果不正确则直接在中间件中进行了请求的中断
-		v, err := controller.GetCurrentUser(c) // 获取从中间件中传递过来的用户名
-		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"message":  "pong",
-			"username": v,
-		})
+	// 注册路由
+	v1.POST("/signup", controller.RegisterHandler) // 注册
+	v1.POST("/login", controller.LoginHandler)     // 登录
+
+	// 注册认证中间件
+	v1.Use(middlewares.JWTAuthMiddleware())
+
+	// 注册一个测试路由(测试用)
+	//v1.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
+	//	// JWTAuthMiddleware 用于验证请求头中是否具有有效的JWT,如果不正确则直接在中间件中进行了请求的中断
+	//	v, err := controller.GetCurrentUser(c) // 获取从中间件中传递过来的用户名
+	//	if err != nil {
+	//		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+	//		return
+	//	}
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"message":  "pong",
+	//		"username": v,
+	//	})
+	//})
+
+	// 注册业务路由
+	{
+		v1.GET("/community", controller.CommunityHandler) // 获取社区列表
+	}
+
+	// 定义404
+	r.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "404 not found"})
 	})
 
 	return r

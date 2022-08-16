@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"errors"
-	"fmt"
 	"go.uber.org/zap"
 )
 
@@ -65,7 +64,7 @@ func Login(u *models.User) (err error) {
 	// 查询用户
 	user := &models.User{} // 接收从数据库中查询出来的用户信息
 	err = db.Get(user, sqlStr, u.Username)
-	fmt.Println("判断用户是否存在")
+	// fmt.Println("判断用户是否存在")
 	if err == sql.ErrNoRows { // 判断是否查询到记录(用户是否存在)
 		//return ErrUserNotExist
 		return ErrInvalidPassword
