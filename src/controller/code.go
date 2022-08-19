@@ -16,6 +16,7 @@ const (
 	NeedLogin
 	InvalidToken
 	UnknownError
+	ParamError
 )
 
 var responseCodeMsg = map[ResponseCode]string{
@@ -30,6 +31,7 @@ var responseCodeMsg = map[ResponseCode]string{
 	NeedLogin:              "需要登录",
 	InvalidToken:           "无效的token",
 	UnknownError:           "未知错误",
+	ParamError:             "参数错误",
 }
 
 func (code ResponseCode) CodeToMsg() interface{} {

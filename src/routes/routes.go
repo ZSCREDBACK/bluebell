@@ -52,7 +52,8 @@ func Setup(GinMode string) *gin.Engine {
 
 	// 注册业务路由
 	{
-		v1.GET("/community", controller.CommunityHandler) // 获取社区列表
+		v1.GET("/community", controller.CommunityHandler)           // 获取社区列表
+		v1.GET("/community/:id", controller.CommunityDetailHandler) // 获取社区详情
 	}
 
 	// 定义404

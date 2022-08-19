@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
-	"errors"
 	"go.uber.org/zap"
 )
 
@@ -13,12 +12,6 @@ import (
 
 // 定义一个加盐字符串
 var salt = "bluebell"
-
-var (
-	ErrUserExist       = errors.New("用户已存在")
-	ErrUserNotExist    = errors.New("用户不存在")
-	ErrInvalidPassword = errors.New("用户名或密码错误")
-)
 
 // CheckUserExist 判断用户记录是否存在
 func CheckUserExist(username string) (err error) {
