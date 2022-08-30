@@ -5,7 +5,6 @@ import (
 	"bluebell/models"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"strconv"
 )
 
 // 帖子相关
@@ -20,15 +19,15 @@ func CreatePostHandler(c *gin.Context) {
 	}
 
 	// 2.从 c 取到当前发请求的用户ID
-	userID, err := GetCurrentUserId(c)
+	userId, err := GetCurrentUserId(c)
 	if err != nil {
 		ResponseErr(c, NeedLogin)
 		return
 	}
-	p.AuthorID = userID
+	p.AuthorID = userId
 
 	// 打印author id排查问题
-	zap.L().Info("打印author id", zap.String("The post's author_id is", strconv.FormatInt(p.AuthorID, 10)))
+	// zap.L().Info("打印author id", zap.String("The post's author_id is", strconv.FormatInt(p.AuthorID, 10)))
 
 	// 3.创建帖子
 	if err := logic.CreatePost(p); err != nil {
@@ -40,3 +39,6 @@ func CreatePostHandler(c *gin.Context) {
 	// 4.返回响应
 	ResponseOk(c, nil)
 }
+
+// 创建帖子的用户id一直都是0,待解决
+// 疑似token生成与解析的问题

@@ -63,9 +63,10 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 
 		// 将当前请求的用户信息保存到请求的上下文c上
 		// 后续的处理函数可以用过c.Get(controller.ContextUserName)来获取当前请求的用户信息,也可以单独用一个函数封装一下
-		c.Set(controller.ContextUserName, mc.Username)
-		c.Set(controller.ContextUserId, mc.UserID)
+		//c.Set(controller.ContextUserName, mc.Username) // 这个是正确的
+		c.Set(controller.ContextUserId, mc.UserID) // c.Get(controller.ContextUserId)
 
+		//zap.L().Info("打印author name", zap.String("The post's author_name is", mc.Username))
 		// 打印author id排查问题
 		zap.L().Info("打印author id", zap.String("The post's author_id is", strconv.FormatInt(mc.UserID, 10)))
 
