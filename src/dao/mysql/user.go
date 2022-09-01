@@ -50,13 +50,16 @@ func InsertUser(user *models.User) error {
 }
 
 // Login 用户登录验证
-func Login(u *models.User) (err error) {
+func Login(user *models.User) (err error) {
+	// 从结构体中获取原密码
+	oPassword := user.Password
+
 	// 定义SQL语句
 	sqlStr := "SELECT user_id, username, password FROM user WHERE username = ?"
 
 	// 查询用户
-	user := &models.User{} // 接收从数据库中查询出来的用户信息
-	err = db.Get(user, sqlStr, u.Username)
+	// 注意此处不能新建一个结构体去接收值,必须使用传参进行接收,否则会导致后续函数接收不到userID数据(一直为0)
+	err = db.Get(user, sqlStr, user.Username)
 	// fmt.Println("判断用户是否存在")
 	if err == sql.ErrNoRows { // 判断是否查询到记录(用户是否存在)
 		//return ErrUserNotExist
@@ -74,7 +77,7 @@ func Login(u *models.User) (err error) {
 	// zap.L().Debug("返回数据库查询出来的用户ID:", zap.String("the user_id is", strconv.FormatInt(user.ID, 10)))
 
 	// 判断用户的登录密码是否正确
-	if user.Password != encryptPassword(u.Password) { // 将数据库中查询出来的密码与用户输入的密码进行比较
+	if user.Password != encryptPassword(oPassword) { // 将数据库中查询出来的密码与用户输入的密码进行比较
 		return ErrInvalidPassword
 	}
 
