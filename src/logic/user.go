@@ -5,6 +5,8 @@ import (
 	"bluebell/models"
 	"bluebell/pkg/jwt"
 	"bluebell/pkg/snowflake"
+	"go.uber.org/zap"
+	"strconv"
 )
 
 // 存放业务逻辑代码
@@ -44,6 +46,9 @@ func Login(p *models.ParamLogin) (token string, err error) {
 	if err = mysql.Login(user); err != nil { // 因为传递的是指针,所以可以获取到User.ID
 		return "", err
 	}
+
+	// Debug
+	zap.L().Debug("返回结构体返回的用户ID:", zap.String("the user_id is", strconv.FormatInt(user.ID, 10)))
 
 	// 4.生成token并返回
 	return jwt.GenToken(user.ID, user.Username)

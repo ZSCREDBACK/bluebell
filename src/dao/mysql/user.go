@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"go.uber.org/zap"
-	"strconv"
 )
 
 // 把数据库操作封装成函数,在业务逻辑中调用
@@ -72,7 +71,7 @@ func Login(u *models.User) (err error) {
 	}
 
 	// 调试
-	zap.L().Debug("返回数据库查询出来的用户ID:", zap.String("the user_id is", strconv.FormatInt(user.ID, 10)))
+	// zap.L().Debug("返回数据库查询出来的用户ID:", zap.String("the user_id is", strconv.FormatInt(user.ID, 10)))
 
 	// 判断用户的登录密码是否正确
 	if user.Password != encryptPassword(u.Password) { // 将数据库中查询出来的密码与用户输入的密码进行比较
