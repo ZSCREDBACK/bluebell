@@ -21,7 +21,7 @@ type CustomClaims struct {
 	// 可根据需要自行添加字段
 	UserID               int64  `json:"user_id"`
 	Username             string `json:"username"`
-	jwt.RegisteredClaims        // 内嵌标准的声明
+	jwt.RegisteredClaims        // 内嵌的声明
 }
 
 // GenToken 生成JWT
@@ -34,7 +34,7 @@ func GenToken(userID int64, username string) (string, error) {
 		jwt.RegisteredClaims{ // 指定内置声明的值,我们这里就简单的指定了两个内置声明，Issuer和ExpiresAt
 			//ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)), // 过期时间
 			ExpiresAt: jwt.NewNumericDate(
-				time.Now().Add(viper.GetDuration("auth.jwt_expire")),
+				time.Now().Add(viper.GetDuration("auth.jwt_expire")), // 过期时间来源于配置文件
 			),
 			Issuer: "bluebell", // 签发人/组织
 		},
@@ -54,7 +54,7 @@ func ParseToken(tokenString string) (*CustomClaims, error) {
 
 	// 如果是自定义Claim结构体则需要使用 ParseWithClaims 方法
 	token, err := jwt.ParseWithClaims(tokenString, mc, func(token *jwt.Token) (i interface{}, err error) {
-		// 直接使用标准的Claim则可以直接使用Parse方法
+		// 标准的Claim则可以直接使用Parse方法
 		// token, err := jwt.Parse(tokenString, func(token *jwt.Token) (i interface{}, err error) {
 		return mySecret, nil
 	})
