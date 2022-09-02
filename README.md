@@ -15,5 +15,6 @@
 ```shell
 # git add .
 # git commit -m "XXX"
+# 如果之前使用gitlab推送过了,这里只需要push即可
 git push https://github.com/ZSCREDBACK/bluebell.git
 ```
