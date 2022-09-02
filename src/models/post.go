@@ -15,3 +15,9 @@ type Post struct {
 }
 
 // 内存对齐: 相同类型的字段放在一起,减少结构体的整体大小,提高程序性能(减少寻址次数)
+
+type ApiPostDetail struct {
+	AuthorName       string             `json:"author_name"`
+	*Post                               // 嵌入帖子结构体
+	*CommunityDetail `json:"community"` // 嵌入社区信息(单独放在一个字段中,避免混合)
+}

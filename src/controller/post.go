@@ -5,6 +5,7 @@ import (
 	"bluebell/models"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"strconv"
 )
 
 // 帖子相关
@@ -40,5 +41,24 @@ func CreatePostHandler(c *gin.Context) {
 	ResponseOk(c, nil)
 }
 
-// 创建帖子的用户id一直都是0,待解决
-// 疑似token生成与解析的问题
+func GetPostDetailHandler(c *gin.Context) {
+	// 1.获取参数(从URL中获取帖子的id)
+	paramStr := c.Param("id")
+	parseInt, err := strconv.ParseInt(paramStr, 10, 64)
+	if err != nil {
+		zap.L().Error("Get post detail with invalid param", zap.Error(err))
+		ResponseErr(c, ParamError)
+		return
+	}
+
+	// 2.根据id获取到帖子的数据(查询数据库)
+	data, err := logic.GetPostById(parseInt)
+	if err != nil {
+		// zap.L().Error("logic.GetPostById failed", zap.Error(err)) // 多余了
+		ResponseErr(c, ServerError)
+		return
+	}
+
+	// 3.返回响应
+	ResponseOk(c, data)
+}

@@ -90,3 +90,11 @@ func encryptPassword(oPassword string) string {
 	nPassword.Write([]byte(salt))                               // 加盐
 	return hex.EncodeToString(nPassword.Sum([]byte(oPassword))) // 将密码加密后转换成16进制的字符串
 }
+
+// GetUserById 通过用户id查询用户信息
+func GetUserById(id int64) (user *models.User, err error) {
+	user = new(models.User)
+	sqlStr := `select user_id, username from user where user_id = ?` // 可以查询更多,这里就简单地返回一下用户名
+	err = db.Get(user, sqlStr, id)
+	return
+}
