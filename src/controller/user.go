@@ -5,6 +5,7 @@ import (
 	"bluebell/logic"
 	"bluebell/models"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -86,7 +87,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 2.业务处理
-	token, err := logic.Login(p)
+	user, err := logic.Login(p)
 	if err != nil {
 		// 将登录错误的用户记录到服务日志中
 		zap.L().Error("Login failed", zap.String("用户", p.Username), zap.Error(err))
@@ -99,5 +100,11 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 3.返回响应
-	ResponseOk(c, token)
+	ResponseOk(c, gin.H{
+		//"user_id": user.ID, // 本来返给前端的是int64类型的数字,由于担心出现数据失真的问题,就返给前端字符串类型
+		"user_id": fmt.Sprintf("%d", user.ID), // 后端自行处理(结构体中加`json:"xx,string"`)这个字符串类型的数字
+		// golang的int64类型的最大值是1<<63-1,如果id值大于1<<53-1(js number类型最大取值),则js接收到数据后会发生数据失真,需要进行处理
+		"user_name": user.Username,
+		"token":     user.Token,
+	})
 }

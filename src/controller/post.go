@@ -62,3 +62,19 @@ func GetPostDetailHandler(c *gin.Context) {
 	// 3.返回响应
 	ResponseOk(c, data)
 }
+
+func GetPostListHandler(c *gin.Context) {
+	// 1.获取请求中的分页参数
+	page, size := GetReqPageSize(c)
+
+	// 2.获取数据
+	data, err := logic.GetPostList(page, size)
+	if err != nil {
+		zap.L().Error("Get post list failed", zap.Error(err))
+		ResponseErr(c, ServerError)
+		return
+	}
+
+	// 3.返回数据
+	ResponseOk(c, data)
+}

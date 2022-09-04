@@ -3,6 +3,7 @@ package controller
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 const ContextUserName = "username" // 放在这里避免循环引用
@@ -38,4 +39,24 @@ func GetCurrentUserId(c *gin.Context) (id int64, err error) {
 		return
 	}
 	return
+}
+
+// GetReqPageSize 获取请求中传递的page和size
+func GetReqPageSize(c *gin.Context) (page, size int64) {
+	// 1.获取分页参数
+	pageStr := c.Query("page")
+	sizeStr := c.Query("size")
+
+	// 2.解析参数
+	var err error
+	page, err = strconv.ParseInt(pageStr, 10, 64)
+	if err != nil {
+		page = 1 // 没有传递就使用默认值,相当于第几页
+	}
+	size, err = strconv.ParseInt(sizeStr, 10, 64)
+	if err != nil {
+		size = 10 // 一页多少条记录
+	}
+
+	return page, size
 }

@@ -31,9 +31,9 @@ func Register(p *models.ParamSignUp) (err error) {
 }
 
 // Login 用户登录
-func Login(p *models.ParamLogin) (token string, err error) {
+func Login(p *models.ParamLogin) (user *models.User, err error) {
 	// 1.构造一个User实例
-	user := &models.User{
+	user = &models.User{
 		Username: p.Username,
 		Password: p.Password,
 	}
@@ -42,12 +42,17 @@ func Login(p *models.ParamLogin) (token string, err error) {
 
 	// 3.查询用户,并进行密码校验
 	if err = mysql.Login(user); err != nil { // 因为传递的是指针,所以可以获取到User.ID
-		return "", err
+		return nil, err
 	}
 
 	// 调试
 	// zap.L().Debug("返回结构体返回的用户ID:", zap.String("the user_id is", strconv.FormatInt(user.ID, 10)))
 
 	// 4.生成token并返回
-	return jwt.GenToken(user.ID, user.Username)
+	token, err := jwt.GenToken(user.ID, user.Username)
+	if err != nil {
+		return nil, err
+	}
+	user.Token = token
+	return
 }

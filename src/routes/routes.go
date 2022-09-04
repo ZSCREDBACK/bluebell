@@ -56,6 +56,7 @@ func Setup(GinMode string) *gin.Engine {
 		v1.GET("/community/:id", controller.CommunityDetailHandler) // 获取社区详情
 		v1.POST("/post", controller.CreatePostHandler)              // 发帖
 		v1.GET("/post/:id", controller.GetPostDetailHandler)        // 获取帖子详情
+		v1.GET("/posts", controller.GetPostListHandler)             // 获取帖子列表
 	}
 
 	// 定义404
