@@ -76,7 +76,7 @@ func RemoveTopStruct(fields map[string]string) map[string]string {
 	return res
 }
 
-// SignUpParamStructLevelValidation 自定义结构体校验函数
+// SignUpParamStructLevelValidation 注册模块的自定义校验函数
 func SignUpParamStructLevelValidation(sl validator.StructLevel) {
 	su := sl.Current().Interface().(models.ParamSignUp)
 

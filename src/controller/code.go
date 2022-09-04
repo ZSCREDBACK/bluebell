@@ -20,13 +20,13 @@ const (
 )
 
 var responseCodeMsg = map[ResponseCode]string{
-	Success:                "success",
-	BadRequest:             "请求参数不正确",
+	Success:                "成功",
+	BadRequest:             "错误的请求",
 	Unauthorized:           "未授权",
-	Forbidden:              "拒绝访问",
+	Forbidden:              "禁止访问",
 	AlreadyExist:           "已存在",
 	NotFound:               "未找到",
-	ServerError:            "服务器错误",
+	ServerError:            "服务端错误",
 	AccountOrPasswordError: "账号或密码错误",
 	NeedLogin:              "需要登录",
 	InvalidToken:           "无效的token",

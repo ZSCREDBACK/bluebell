@@ -22,7 +22,7 @@ import (
 type Response struct {
 	Code ResponseCode `json:"code"`
 	Msg  interface{}  `json:"msg"`
-	Data interface{}  `json:"data"`
+	Data interface{}  `json:"data,omitempty"` // omitempty 没有数据就忽略该字段的返回
 }
 
 // ResponseErr 根据状态码返回相应的错误提示信息

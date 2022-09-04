@@ -5,7 +5,7 @@ import "time"
 // 帖子的数据库模型
 
 type Post struct {
-	ID          int64     `json:"id,string" db:"post_id"` // 避免数据失真
+	ID          int64     `json:"id,string" db:"post_id"` // 避免数据失真,合理判断范围大小,并不是所有字段都会超过 1^53 -1
 	AuthorID    int64     `json:"author_id" db:"author_id"`
 	CommunityID int64     `json:"community_id" db:"community_id" binding:"required"`
 	Status      int32     `json:"status" db:"status"`
