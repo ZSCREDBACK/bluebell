@@ -2,6 +2,7 @@ package logic
 
 import (
 	"bluebell/dao/mysql"
+	"bluebell/dao/redis"
 	"bluebell/models"
 	"bluebell/pkg/snowflake"
 	"go.uber.org/zap"
@@ -14,7 +15,13 @@ func CreatePost(p *models.Post) (err error) {
 	p.ID = snowflake.GenID()
 
 	// 2.保存到数据库
-	return mysql.CreatePost(p)
+	if err = mysql.CreatePost(p); err != nil {
+		return err
+	}
+
+	// 3.同步发帖时间到redis,使其成为投票截止时间的依据
+	err = redis.CreatePost(p.ID)
+	return
 }
 
 func GetPostById(id int64) (data *models.ApiPostDetail, err error) {

@@ -16,3 +16,8 @@ const (
 	KeyPostScore   = "post:score"  // ZSet;帖子及投票分数
 	KeyVotedPrefix = "post:voted:" // ZSet;记录用户及投票类型(赞成or反对) // post:voted:post_id 最后一项是变化的,所以在设置Key名时加上了prefix来明晰其含义
 )
+
+// 为key值加上前缀
+func getKey(key string) string {
+	return KeyPrefix + key
+}

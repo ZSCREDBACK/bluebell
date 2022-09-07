@@ -5,6 +5,7 @@ import (
 	"bluebell/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"go.uber.org/zap"
 )
 
 func PostVoteHandler(c *gin.Context) {
@@ -21,9 +22,21 @@ func PostVoteHandler(c *gin.Context) {
 		return
 	}
 
-	// 2.进行投票
-	logic.PostVote()
+	// 2.获取当前请求用户的ID
+	userID, err := GetCurrentUserId(c)
+	if err != nil {
+		ResponseErr(c, NeedLogin) // 没有获取到userid,说明没有登录
+		return
+	}
 
-	// 3.返回响应
+	// 3.进行投票
+	err = logic.VoteForPost(userID, p)
+	if err != nil {
+		zap.L().Error("Vote for post failed", zap.Error(err))
+		ResponseErr(c, ServerError)
+		return
+	}
+
+	// 4.返回响应
 	ResponseOk(c, nil)
 }

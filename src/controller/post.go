@@ -31,7 +31,7 @@ func CreatePostHandler(c *gin.Context) {
 	// zap.L().Info("打印author id", zap.String("The post's author_id is", strconv.FormatInt(p.AuthorID, 10)))
 
 	// 3.创建帖子
-	if err := logic.CreatePost(p); err != nil {
+	if err = logic.CreatePost(p); err != nil {
 		zap.L().Error("logic.CreatePost(p) failed", zap.Error(err))
 		ResponseErr(c, ServerError)
 		return
