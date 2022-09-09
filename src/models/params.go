@@ -1,5 +1,11 @@
 package models
 
+// 帖子排序相关
+const (
+	OrderTime  = "time"
+	OrderScore = "score"
+)
+
 // ParamSignUp 定义注册请求的结构体参数
 type ParamSignUp struct {
 	Username   string `json:"username" binding:"required"`
@@ -26,4 +32,11 @@ type ParamVoteData struct {
 	// 零值不会进行传递到结构体中,传递零值反序列化时会对该字段进行忽略,想要解决这个问题,需要使用指针
 	// 如果是gorm的话,也可以使用内置的sql.NullInt64进行解决
 	// 也可以通过去除required tag来避免(validator库存在的问题),但是个人不推荐这样做
+}
+
+// ParamPostList 获取帖子列表信息
+type ParamPostList struct {
+	Page  int64  `json:"page" form:"page"`   // 页数
+	Size  int64  `json:"size" form:"size"`   // 分页大小
+	Order string `json:"order" form:"order"` // 排序方式
 }

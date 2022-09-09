@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// redis 基础: https://redis.cn/
+
 // 推荐阅读
 // 基于用户投票的相关算法: https://www.ruanyifeng.com/blog/algorithm/
 

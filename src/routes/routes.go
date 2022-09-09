@@ -58,6 +58,7 @@ func Setup(GinMode string) *gin.Engine {
 		v1.GET("/post/:id", controller.GetPostDetailHandler)        // 获取帖子详情
 		v1.GET("/posts", controller.GetPostListHandler)             // 获取帖子列表
 		v1.POST("/vote", controller.PostVoteHandler)                // 用户投票
+		v1.GET("/posts2", controller.GetPostListHandler2)           // 获取帖子列表(优化版)
 	}
 
 	// 定义404
