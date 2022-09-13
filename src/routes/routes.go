@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+
+	_ "bluebell/docs" // 导入生成的docs
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Setup(GinMode string) *gin.Engine {
@@ -32,6 +36,9 @@ func Setup(GinMode string) *gin.Engine {
 	// 注册路由
 	v1.POST("/signup", controller.RegisterHandler) // 注册
 	v1.POST("/login", controller.LoginHandler)     // 登录
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler)) // 接口文档相关
+	// r.GET("/swagger/*any", gs.DisablingWrapHandler(swaggerFiles.Handler, "NAME_OF_ENV_VARIABLE")) // 该环境变量如果有值,则禁用swagger
 
 	// 注册认证中间件
 	v1.Use(middlewares.JWTAuthMiddleware())

@@ -11,10 +11,11 @@ package redis
 // 尽量名称设置得见名知意
 
 const (
-	KeyPrefix      = "bluebell:"   // 一般使用:分割比较多,约定俗成,非必须
-	KeyPostTime    = "post:time"   // ZSet;帖子及发帖时间
-	KeyPostScore   = "post:score"  // ZSet;帖子及投票分数
-	KeyVotedPrefix = "post:voted:" // ZSet;记录用户及投票类型(赞成or反对) // post:voted:post_id 最后一项是变化的,所以在设置Key名时加上了prefix来明晰其含义
+	KeyPrefix          = "bluebell:"   // 一般使用:分割比较多,约定俗成,非必须
+	KeyPostTime        = "post:time"   // ZSet;帖子及发帖时间
+	KeyPostScore       = "post:score"  // ZSet;帖子及投票分数
+	KeyVotedPrefix     = "post:voted:" // ZSet;记录用户及投票类型(赞成or反对) // post:voted:post_id 最后一项是变化的,所以在设置Key名时加上了prefix来明晰其含义
+	KeyCommunityPrefix = "community:"  // Set;保存每个社区(分类)下的帖子的ID
 )
 
 // 为key值加上前缀

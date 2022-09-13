@@ -39,7 +39,10 @@ const (
 	scorePerVote = 432 // 每一票的分值
 )
 
-var ErrVoteTimeExpire = errors.New("帖子投票时间已过")
+var (
+	ErrVoteTimeExpire = errors.New("帖子投票时间已过")
+	ErrVoteRepeated   = errors.New("不允许重复投票")
+)
 
 func VoteForPost(userID, postID string, value float64) error {
 	// 1.判断投票限制(取帖子发布时间)
@@ -52,6 +55,9 @@ func VoteForPost(userID, postID string, value float64) error {
 
 	// 2.1.查询当前用户给该帖子的投票记录
 	ov := rdb.ZScore(getKey(KeyVotedPrefix+postID), userID).Val() // 之前的分数
+	if value == ov {                                              // 如果此次投票和之前投票结果是一致的,则返回不允许重复投票
+		return ErrVoteRepeated
+	}
 	var op float64
 	if value > ov { // 如果现在投票的分数大于之前的分数,则认为是赞成票,方向为正
 		op = 1

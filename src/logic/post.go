@@ -20,7 +20,7 @@ func CreatePost(p *models.Post) (err error) {
 	}
 
 	// 3.同步发帖时间到redis,使其成为投票截止时间的依据
-	err = redis.CreatePost(p.ID)
+	err = redis.CreatePost(p.ID, p.CommunityID)
 	return
 }
 
@@ -123,8 +123,14 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 		return
 	}
 
+	// 查询出每个帖子的投票数
+	voteData, err := redis.GetPostVoteData(ids)
+	if err != nil {
+		return nil, err
+	}
+
 	// 3.返回数据(复制上面的即可)
-	for _, post := range postList {
+	for idx, post := range postList {
 		// 根据作者id查询出对应作者信息
 		user, err := mysql.GetUserById(post.AuthorID)
 		if err != nil {
@@ -146,6 +152,7 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 		// 组合数据
 		postDetail := &models.ApiPostDetail{
 			AuthorName:      user.Username,
+			VoteNum:         voteData[idx], // 利用idx的数量对该帖子赞成票进行计数
 			Post:            post,
 			CommunityDetail: community,
 		}
@@ -154,4 +161,64 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 		data = append(data, postDetail)
 	}
 	return
+}
+
+func GetCommunityPostList(p *models.ParamPostList) (data []*models.ApiPostDetail, err error) {
+	ids, err := redis.GetCommunityPostIdsInOrder(p)
+	if err != nil {
+		return
+	}
+	if len(ids) == 0 {
+		zap.L().Warn("Get community post ids in order failed, no post id found.", zap.Error(err))
+		return
+	}
+
+	postList, err := mysql.GetPostListByIds(ids)
+	if err != nil {
+		zap.L().Error("Get community post list by ids failed", zap.Error(err))
+		return
+	}
+
+	voteData, err := redis.GetPostVoteData(ids)
+	if err != nil {
+		return nil, err
+	}
+
+	for idx, post := range postList {
+		user, err := mysql.GetUserById(post.AuthorID)
+		if err != nil {
+			zap.L().Error("Get post's author failed",
+				zap.Int64("author_id", post.AuthorID),
+				zap.Error(err))
+			continue
+		}
+
+		community, err := mysql.GetCommunityDetail(post.CommunityID)
+		if err != nil {
+			zap.L().Error("Get community detail failed",
+				zap.Int64("community_id", post.CommunityID),
+				zap.Error(err))
+			continue
+		}
+
+		postDetail := &models.ApiPostDetail{
+			AuthorName:      user.Username,
+			VoteNum:         voteData[idx],
+			Post:            post,
+			CommunityDetail: community,
+		}
+
+		data = append(data, postDetail)
+	}
+	return
+}
+
+// GetPostListNew 将两个帖子列表的查询逻辑合二为一
+func GetPostListNew(p *models.ParamPostList) (data []*models.ApiPostDetail, err error) {
+	// 判断是否传入了社区ID
+	if p.CommunityID == 0 {
+		return GetPostList2(p) // 查询所有帖子
+	} else {
+		return GetCommunityPostList(p) // 根据社区ID查询所有帖子
+	}
 }

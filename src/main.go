@@ -19,7 +19,22 @@ import (
 	"go.uber.org/zap"
 )
 
-// Bluebell 论坛项目
+// 以下注解用于生成swagger接口文档
+
+// @title          Bluebell 论坛项目
+// @version        1.0
+// @description    论坛项目
+// @termsOfService https://bluebell.zhangsichen.cn
+
+// @contact.name  zhangsichen
+// @contact.url   https://blog.zhangsichen.cn
+// @contact.email zsc@zhangsichen.cn
+
+// @license.name Apache 2.0
+// @license.url  https://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host     localhost:12345
+// @BasePath /api/v1
 
 func main() {
 	// 1.加载配置文件

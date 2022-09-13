@@ -10,6 +10,8 @@ import (
 
 // 帖子相关
 
+// 使用swagger生成接口文档,注释一般位于controller层
+
 func CreatePostHandler(c *gin.Context) {
 	// 1.获取参数并进行参数校验
 	p := new(models.Post)
@@ -41,6 +43,17 @@ func CreatePostHandler(c *gin.Context) {
 	ResponseOk(c, nil)
 }
 
+// GetPostDetailHandler 帖子详情接口
+// @Summary     帖子详情接口
+// @Description 可获取帖子详情接口
+// @Tags        帖子查询相关接口
+// @Accept      application/json
+// @Produce     application/json
+// @Param       Authorization header string false "Bearer 用户令牌"
+// @Param       id            path   int  true  "查询参数"
+// @Security    ApiKeyAuth
+// @Success     200 {object} _ResponsePostDetail
+// @Router      /post/{id} [get]
 func GetPostDetailHandler(c *gin.Context) {
 	// 1.获取参数(从URL中获取帖子的id)
 	paramStr := c.Param("id")
@@ -63,6 +76,18 @@ func GetPostDetailHandler(c *gin.Context) {
 	ResponseOk(c, data)
 }
 
+// GetPostListHandler 帖子列表接口
+// @Summary     帖子列表接口
+// @Description 可按分页参数查询帖子列表接口
+// @Tags        帖子查询相关接口
+// @Accept      application/json
+// @Produce     application/json
+// @Param       Authorization header string false "Bearer 用户令牌"
+// @Param       page          query  string false "分页页数"
+// @Param       size          query  string false "分页大小"
+// @Security    ApiKeyAuth
+// @Success     200 {object} _ResponsePostList
+// @Router      /posts [get]
 func GetPostListHandler(c *gin.Context) {
 	// 1.获取请求中的分页参数
 	page, size := GetReqPageSize(c)
@@ -79,6 +104,17 @@ func GetPostListHandler(c *gin.Context) {
 	ResponseOk(c, data)
 }
 
+// GetPostListHandler2 升级版帖子列表接口
+// @Summary     升级版帖子列表接口
+// @Description 可按社区按时间或分数排序查询帖子列表接口
+// @Tags        帖子查询相关接口
+// @Accept      application/json
+// @Produce     application/json
+// @Param       Authorization header string               false "Bearer 用户令牌"
+// @Param       object        query  models.ParamPostList false "查询参数"
+// @Security    ApiKeyAuth
+// @Success     200 {object} _ResponsePostList
+// @Router      /posts2 [get]
 func GetPostListHandler2(c *gin.Context) {
 	// 1.初始化帖子列表结构体,并设置默认值
 	p := &models.ParamPostList{
@@ -97,7 +133,8 @@ func GetPostListHandler2(c *gin.Context) {
 	}
 
 	// 3.获取数据
-	data, err := logic.GetPostList2(p)
+	//data, err := logic.GetPostList2(p)
+	data, err := logic.GetPostListNew(p) // 更新: 函数糅合
 	if err != nil {
 		zap.L().Error("Get post list failed", zap.Error(err))
 		ResponseErr(c, ServerError)
@@ -107,3 +144,30 @@ func GetPostListHandler2(c *gin.Context) {
 	// 4.返回数据
 	ResponseOk(c, data)
 }
+
+// GetCommunityPostListHandler 处理根据社区ID查询帖子列表(此处将两个函数进行糅合,所以进行了注释)
+//func GetCommunityPostListHandler(c *gin.Context) {
+//	p := &models.ParamPostList{
+//		CommunityID: 0,
+//		Page:        1,
+//		Size:        10,
+//		Order:       models.OrderTime,
+//	}
+//
+//	if err := c.ShouldBindQuery(p); err != nil {
+//		zap.L().Error("Get community post list failed, fail to bind the query string param", zap.Error(err))
+//		ResponseErr(c, ServerError)
+//		return
+//	}
+//
+//	data, err := logic.GetCommunityPostList(p)
+//	if err != nil {
+//		zap.L().Error("Get community post list failed", zap.Error(err))
+//		ResponseErr(c, ServerError)
+//		return
+//	}
+//
+//	ResponseOk(c, data)
+//}
+
+// 函数糅合适用于两个函数实现的功能类似,省去一些重复的步骤

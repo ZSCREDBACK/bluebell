@@ -34,9 +34,12 @@ type ParamVoteData struct {
 	// 也可以通过去除required tag来避免(validator库存在的问题),但是个人不推荐这样做
 }
 
-// ParamPostList 获取帖子列表信息
+// ParamPostList 获取帖子列表信息的query string参数
 type ParamPostList struct {
-	Page  int64  `json:"page" form:"page"`   // 页数
-	Size  int64  `json:"size" form:"size"`   // 分页大小
-	Order string `json:"order" form:"order"` // 排序方式
+	CommunityID int64  `json:"community_id" form:"community_id"`   // 社区ID(可以为空,如果为空则检索范围是所有帖子)
+	Page        int64  `json:"page" form:"page" example:"1"`       // 页数
+	Size        int64  `json:"size" form:"size" example:"10"`      // 分页大小
+	Order       string `json:"order" form:"order" example:"score"` // 排序方式
 }
+
+// example 在swagger页面中生成注释说明
