@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"time"
 
 	_ "bluebell/docs" // 导入生成的docs
 	swaggerFiles "github.com/swaggo/files"
@@ -29,7 +30,9 @@ func Setup(GinMode string) *gin.Engine {
 
 	r := gin.Default()
 
-	r.Use(logger.GinLogger(), logger.GinRecovery(true))
+	// r.Use(logger.GinLogger(), logger.GinRecovery(true))
+	// 注册全局限流中间件: 两秒填充一个令牌,令牌桶中最多有个1个令牌
+	r.Use(logger.GinLogger(), logger.GinRecovery(true), middlewares.RateLimitMiddleware(2*time.Second, 1))
 
 	v1 := r.Group("/api/v1")
 
