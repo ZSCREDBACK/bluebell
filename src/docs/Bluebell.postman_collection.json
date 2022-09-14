@@ -1,0 +1,363 @@
+{
+	"info": {
+		"_postman_id": "4aca10c4-e6ec-41d8-b388-a1e356fa473b",
+		"name": "Bluebell",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bluebell Sign Up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"gaga\",\r\n    \"password\": \"123\",\r\n    \"re_password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/signup",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"gaga\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Get Community List",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjowLCJ1c2VybmFtZSI6InNrbSIsImlzcyI6ImJsdWViZWxsIiwiZXhwIjoxNjkyMjAwMDQzfQ.rn6sOgsYGCAW1FoRF8S1z4r3JA058dHL9K-g_mfLItw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/community",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"community"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Get Community By Id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjowLCJ1c2VybmFtZSI6InNrbSIsImlzcyI6ImJsdWViZWxsIiwiZXhwIjoxNjkyMjAwMDQzfQ.rn6sOgsYGCAW1FoRF8S1z4r3JA058dHL9K-g_mfLItw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/community/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"community",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Send Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMzg2NzE5MjkzMjExMDMzNiwidXNlcm5hbWUiOiJnYWdhIiwiaXNzIjoiYmx1ZWJlbGwiLCJleHAiOjE2OTM1NDk0Mjl9.3IwP4FR7rSMP9fwLyrVm8uBK6y5HnRZC4wh980oEof8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"小A\",\r\n    \"content\": \"剑灵\",\r\n    \"community_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/post",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Get Post Details",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMzg2NzE5MjkzMjExMDMzNiwidXNlcm5hbWUiOiJnYWdhIiwiaXNzIjoiYmx1ZWJlbGwiLCJleHAiOjE2OTM1NDk0Mjl9.3IwP4FR7rSMP9fwLyrVm8uBK6y5HnRZC4wh980oEof8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/post/13867398805327872",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"post",
+						"13867398805327872"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Get Post List",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMzg2NzE5MjkzMjExMDMzNiwidXNlcm5hbWUiOiJnYWdhIiwiaXNzIjoiYmx1ZWJlbGwiLCJleHAiOjE2OTM1NDk0Mjl9.3IwP4FR7rSMP9fwLyrVm8uBK6y5HnRZC4wh980oEof8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/posts?page=8&size=2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "8"
+						},
+						{
+							"key": "size",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Vote For Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMzg2NzE5MjkzMjExMDMzNiwidXNlcm5hbWUiOiJnYWdhIiwiaXNzIjoiYmx1ZWJlbGwiLCJleHAiOjE2OTM1NDk0Mjl9.3IwP4FR7rSMP9fwLyrVm8uBK6y5HnRZC4wh980oEof8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"post_id\": \"16197635136294912\",\r\n    \"direction\": -1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/vote",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"vote"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bluebell Get Post List In Order",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMzg2NzE5MjkzMjExMDMzNiwidXNlcm5hbWUiOiJnYWdhIiwiaXNzIjoiYmx1ZWJlbGwiLCJleHAiOjE2OTM1NDk0Mjl9.3IwP4FR7rSMP9fwLyrVm8uBK6y5HnRZC4wh980oEof8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:12345/api/v1/posts?size=2&order=score&page=3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "12345",
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "2"
+						},
+						{
+							"key": "order",
+							"value": "score",
+							"description": "根据时间或分数对帖子进行排序,可选: time、score"
+						},
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
