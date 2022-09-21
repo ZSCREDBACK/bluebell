@@ -18,4 +18,4 @@ type _ResponsePostDetail struct {
 	Data    *models.ApiPostDetail `json:"data"` // 数据
 }
 
-// 示例结构体的返回值未嵌套的问题待解决
+// 示例结构体的返回值未嵌套的问题待解决(直接修改最终生成的docs.go?!)

@@ -2,16 +2,16 @@ package routes
 
 import (
 	"bluebell/controller"
+	_ "bluebell/docs" // 导入生成的docs
 	"bluebell/logger"
 	"bluebell/middlewares"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-	"net/http"
-	"time"
-
-	_ "bluebell/docs" // 导入生成的docs
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"go.uber.org/zap"
+	"net/http"
+
+	"github.com/gin-contrib/pprof"
 )
 
 func Setup(GinMode string) *gin.Engine {
@@ -30,9 +30,9 @@ func Setup(GinMode string) *gin.Engine {
 
 	r := gin.Default()
 
-	// r.Use(logger.GinLogger(), logger.GinRecovery(true))
+	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	// 注册全局限流中间件: 两秒填充一个令牌,令牌桶中最多有个1个令牌
-	r.Use(logger.GinLogger(), logger.GinRecovery(true), middlewares.RateLimitMiddleware(2*time.Second, 1))
+	// r.Use(logger.GinLogger(), logger.GinRecovery(true), middlewares.RateLimitMiddleware(2*time.Second, 1))
 
 	v1 := r.Group("/api/v1")
 
@@ -70,6 +70,14 @@ func Setup(GinMode string) *gin.Engine {
 		v1.POST("/vote", controller.PostVoteHandler)                // 用户投票
 		v1.GET("/posts2", controller.GetPostListHandler2)           // 获取帖子列表(优化版)
 	}
+
+	// 注册pprof相关路由,用于性能调优
+	// 调用性能分析工具进行CPU分析: go tool pprof http://127.0.0.1:12345/debug/pprof/profile
+	// 使用内存分析: go tool pprof -inuse_space http://127.0.0.1:12345/debug/pprof/heap
+	// 配合压测工具使用: go-wrk.exe -t=8  -n=10000 http://127.0.0.1:12345/api/v1/posts
+	// 生成火焰图: go-torch -u http://127.0.0.1:12345 -t 30
+	// 更多详见: Go性能调优.md
+	pprof.Register(r)
 
 	// 定义404
 	r.NoRoute(func(c *gin.Context) {
